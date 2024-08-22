@@ -1,14 +1,15 @@
-
 package crud;
 
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author diego
  */
 public class Vista extends javax.swing.JFrame {
-    
+
     ControladorCliente controladorCliente = new ControladorCliente();
 
     /**
@@ -163,16 +164,20 @@ public class Vista extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
-        
+        Cliente cliente = new Cliente();
         try {
-            
-            controladorCliente.agregarCliente(this);
-            JOptionPane.showMessageDialog(null,"Registro agregado!!");
+            cliente.setNombre(txtNombres.getText());
+            cliente.setEmail(txtEmail.getText());
+            cliente.setTelefono(txtTelefono.getText());
+            cliente.setTipo_cliente(1);
+            controladorCliente.agregarCliente(cliente);
+            JOptionPane.showMessageDialog(null, "Registro agregado!!");
+            limpiarCampos();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-        
-        
+
+
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void txtNombresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombresActionPerformed
@@ -181,13 +186,39 @@ public class Vista extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
+        Filter filter = new Filter();
+        Page page = new Page(1, 10);
         try {
-            controladorCliente.buscarCliente(this);
+            filter.setDescription(txtBuscar.getText());
+            List<Cliente> clientes = controladorCliente.buscarCliente(filter, page);
+            DefaultTableModel model = new DefaultTableModel();
+            // se configuran los nombres de las columnas de la tabla
+            model.addColumn("ID");
+            model.addColumn("Nombres");
+            model.addColumn("Email");
+            model.addColumn("Télefono");
+            txtTabla.setModel(model);
+            String[] datos = new String[4];
+
+            for (Cliente cliente : clientes) {
+                datos[0] = String.valueOf(cliente.getId());
+                datos[1] = cliente.getNombre();
+                datos[2] = cliente.getEmail();
+                datos[3] = cliente.getTelefono();
+                model.addRow(datos);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    
+    public void limpiarCampos() {
+        txtNombres.setText(null);
+        txtEmail.setText(null);
+        txtTelefono.setText(null);
+        txtBuscar.setText(null);
+    }
     /**
      * @param args the command line arguments
      */

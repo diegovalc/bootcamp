@@ -12,8 +12,6 @@ import java.util.List;
  */
 public final class ClienteDaoImp implements ClienteDao {
 
-    Conexion conexion = new Conexion();
-    Connection con;
 
     private class ClienteException extends RuntimeException {
 
@@ -24,7 +22,7 @@ public final class ClienteDaoImp implements ClienteDao {
 
     @Override
     public void insertar(Cliente cliente) {
-        con = conexion.getConection();
+        Connection con = Conexion.getConection();
         PreparedStatement ps = null;
         String sql = "insert into cliente (nombre,email,telefono,tipo_cliente) values (?,?,?,?)";
         try {
@@ -43,7 +41,7 @@ public final class ClienteDaoImp implements ClienteDao {
 
     @Override
     public void modificar(Cliente cliente) {
-        con = conexion.getConection();
+        Connection con = Conexion.getConection();
         PreparedStatement ps = null;
         String sql = "update cliente set nombre = ? , email = ? , telefono = ? where id=?";
         try {
@@ -60,7 +58,7 @@ public final class ClienteDaoImp implements ClienteDao {
 
     @Override
     public void eliminar(Cliente cliente) {
-        con = conexion.getConection();
+        Connection con = Conexion.getConection();
         PreparedStatement ps = null;
         String sql = "delete from cliente where id=?";
         try {
@@ -75,7 +73,7 @@ public final class ClienteDaoImp implements ClienteDao {
     @Override
     public List<Cliente> buscarCliente(Filter filter, Page page) {
         List<Cliente> clientes = new ArrayList<>();
-        con = conexion.getConection();
+        Connection con = Conexion.getConection();
         PreparedStatement ps = null;
         String sql = "Select * from cliente where nombre like ? limit ? offset ?";
         ResultSet rs = null;

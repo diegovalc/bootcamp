@@ -2,10 +2,6 @@ package crud;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,21 +9,26 @@ import javax.swing.JOptionPane;
  */
 public final class Conexion {
 
-    private final String DB = "clientes";
-    private final String USER = "root";
-    private final String PASSWORD = "";
-    private final String URL = "jdbc:mysql://localhost:3306/";
+    private static Connection con = null;
 
-    public Connection getConection() {
-        Connection con = null;
+    static {
+        String DB = "clientes";
+        String USER = "root";
+        String PASSWORD = "";
+        String URL = "jdbc:mysql://localhost:3306/";
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = (Connection) DriverManager.getConnection(URL + DB, USER, PASSWORD);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al conectarse a la BD");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getCause() + e.getMessage());
+            // JOptionPane.showMessageDialog(null, "Error al conectarse a la BD");
+            //} catch (ClassNotFoundException ex) {
+            //    Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static Connection getConection() {
         return con;
     }
 }
